@@ -13,6 +13,8 @@ module Bounteous
       attr_reader :settings, :config
 
       def initialize(options)
+        abort(DateTime.now.to_s + ' - Unable to obtain lock. Aborting.') unless cron_lock
+
         @settings = {}
         allowed_override = %w[space_id access_token environment_id default_locale quiet]
 
@@ -33,13 +35,19 @@ module Bounteous
         publisher.publish
         unpublisher = Unpublisher.new(@config)
         unpublisher.unpublish
-
       end
 
       def install
         @config = Configuration.new(@settings)
         installer = Installer.new(@config)
         installer.install
+      end
+
+      private
+
+      def cron_lock
+        file = File.new('/tmp/bounteous-contentful-scheduler.lock', 'w')
+        file.flock(File::LOCK_EX | File::LOCK_NB)
       end
     end
   end
