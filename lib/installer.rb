@@ -22,15 +22,25 @@ module Bounteous
         title_field.name = 'Title'
         title_field.type = 'Symbol'
 
-        link_field           = ::Contentful::Management::Field.new
-        link_field.type      = 'Link'
-        link_field.link_type = 'Entry'
+        entry_field           = ::Contentful::Management::Field.new
+        entry_field.type      = 'Link'
+        entry_field.link_type = 'Entry'
 
-        multi_link_field       = ::Contentful::Management::Field.new
-        multi_link_field.id    = 'items'
-        multi_link_field.name  = 'Items'
-        multi_link_field.type  = 'Array'
-        multi_link_field.items = link_field
+        multi_entry_field       = ::Contentful::Management::Field.new
+        multi_entry_field.id    = 'entries'
+        multi_entry_field.name  = 'Entries'
+        multi_entry_field.type  = 'Array'
+        multi_entry_field.items = entry_field
+
+        asset_field           = ::Contentful::Management::Field.new
+        asset_field.type      = 'Link'
+        asset_field.link_type = 'Asset'
+
+        multi_asset_field       = ::Contentful::Management::Field.new
+        multi_asset_field.id    = 'assets'
+        multi_asset_field.name  = 'Assets'
+        multi_asset_field.type  = 'Array'
+        multi_asset_field.items = asset_field
 
         date_field      = ::Contentful::Management::Field.new
         date_field.id   = 'date'
@@ -47,9 +57,14 @@ module Bounteous
         content_type.name                      = 'Scheduler - Publish'
         content_type.id                        = @config.publish_id
         content_type.properties[:displayField] = 'title'
-        content_type.fields                    = [title_field, date_field, multi_link_field, processed_field]
+        content_type.fields                    = [title_field, date_field, multi_entry_field, multi_asset_field, processed_field]
         content_type.save
         content_type.activate
+
+        editor                 = @environment.editor_interfaces.default(@config.publish_id)
+        controls               = editor.properties[:controls]
+        controls[1][:settings] = {'format': 'timeZ', 'ampm': '12'}
+        editor.update(controls: controls)
 
         puts 'Scheduler Publish Created and Activated!'
       end
@@ -62,15 +77,25 @@ module Bounteous
         title_field.name = 'Title'
         title_field.type = 'Symbol'
 
-        link_field           = ::Contentful::Management::Field.new
-        link_field.type      = 'Link'
-        link_field.link_type = 'Entry'
+        entry_field           = ::Contentful::Management::Field.new
+        entry_field.type      = 'Link'
+        entry_field.link_type = 'Entry'
 
-        multi_link_field       = ::Contentful::Management::Field.new
-        multi_link_field.id    = 'items'
-        multi_link_field.name  = 'Items'
-        multi_link_field.type  = 'Array'
-        multi_link_field.items = link_field
+        multi_entry_field       = ::Contentful::Management::Field.new
+        multi_entry_field.id    = 'entries'
+        multi_entry_field.name  = 'Entries'
+        multi_entry_field.type  = 'Array'
+        multi_entry_field.items = entry_field
+
+        asset_field           = ::Contentful::Management::Field.new
+        asset_field.type      = 'Link'
+        asset_field.link_type = 'Asset'
+
+        multi_asset_field       = ::Contentful::Management::Field.new
+        multi_asset_field.id    = 'assets'
+        multi_asset_field.name  = 'Assets'
+        multi_asset_field.type  = 'Array'
+        multi_asset_field.items = asset_field
 
         date_field      = ::Contentful::Management::Field.new
         date_field.id   = 'date'
@@ -87,9 +112,14 @@ module Bounteous
         content_type.name                      = 'Scheduler - Unpublish'
         content_type.id                        = @config.unpublish_id
         content_type.properties[:displayField] = 'title'
-        content_type.fields                    = [title_field, date_field, multi_link_field, processed_field]
+        content_type.fields                    = [title_field, date_field, multi_entry_field, multi_asset_field, processed_field]
         content_type.save
         content_type.activate
+
+        editor                 = @environment.editor_interfaces.default(@config.unpublish_id)
+        controls               = editor.properties[:controls]
+        controls[1][:settings] = {'format': 'timeZ', 'ampm': '12'}
+        editor.update(controls: controls)
 
         puts 'Scheduler Unpublish Created and Activated!'
       end

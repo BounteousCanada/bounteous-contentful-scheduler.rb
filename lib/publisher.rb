@@ -10,19 +10,16 @@ module Bounteous
           next unless check_entry?(entry)
 
           puts DateTime.now.to_s + ' - Processing ' + entry.fields[:title] + ' (' + entry.id + ')' unless @config.quiet
-          entry.fields[:items].each do |item|
-            entry_to_publish = @environment.entries.find(item['sys']['id'])
-            next if entry_to_publish.published?
-
-            entry_to_publish.publish
-            puts DateTime.now.to_s + ' - Published ' + entry_to_publish.fields[:title] + ' (' + entry_to_publish.id + ')' unless @config.quiet
-          end
+          publish_entries(entry)
+          publish_assets(entry)
           entry.fields[:processed] = true
           entry.fields[:title] = '(PROCESSED) ' + entry.fields[:title]
-          entry.save
+          entry.save.publish
         end
         puts DateTime.now.to_s + ' - Publisher Finished' unless @config.quiet
       end
+
+      private
 
       def check_entry?(entry)
         entry.published? && check_date?(entry.fields[:date])
@@ -30,6 +27,26 @@ module Bounteous
 
       def check_date?(date)
         DateTime.parse(date).past?
+      end
+
+      def publish_entries(entry)
+        entry.fields[:entries].each do |item|
+          entry_to_publish = @environment.entries.find(item['sys']['id'])
+          next if entry_to_publish.published?
+
+          entry_to_publish.publish
+          puts DateTime.now.to_s + ' - Published Entry ' + entry_to_publish.fields[:title] + ' (' + entry_to_publish.id + ')' unless @config.quiet
+        end
+      end
+
+      def publish_assets(entry)
+        entry.fields[:assets].each do |item|
+          asset_to_publish = @environment.assets.find(item['sys']['id'])
+          next if asset_to_publish.published?
+
+          asset_to_publish.publish
+          puts DateTime.now.to_s + ' - Published Asset ' + asset_to_publish.fields[:title] + ' (' + asset_to_publish.id + ')' unless @config.quiet
+        end
       end
     end
   end
