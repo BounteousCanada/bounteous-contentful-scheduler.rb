@@ -4,18 +4,6 @@ Small Ruby application designed to schedule the publishing and unpublishing of e
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'bounteous-contentful-scheduler'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
     $ gem install bounteous-contentful-scheduler
 
 ## Usage
