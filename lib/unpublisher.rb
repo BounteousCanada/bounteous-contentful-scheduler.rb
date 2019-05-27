@@ -30,7 +30,7 @@ module Bounteous
       end
 
       def unpublish_entries(entry)
-        entry.fields[:entries].each do |item|
+        entry.fields[:entries]&.each do |item|
           entry_to_unpublish = @environment.entries.find(item['sys']['id'])
           next unless entry_to_unpublish.published?
 
@@ -40,7 +40,7 @@ module Bounteous
       end
 
       def unpublish_assets(entry)
-        entry.fields[:assets].each do |item|
+        entry.fields[:assets]&.each do |item|
           asset_to_unpublish = @environment.assets.find(item['sys']['id'])
           next unless asset_to_unpublish.published?
 

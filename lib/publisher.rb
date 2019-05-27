@@ -30,7 +30,7 @@ module Bounteous
       end
 
       def publish_entries(entry)
-        entry.fields[:entries].each do |item|
+        entry.fields[:entries]&.each do |item|
           entry_to_publish = @environment.entries.find(item['sys']['id'])
           next if entry_to_publish.published?
 
@@ -40,7 +40,7 @@ module Bounteous
       end
 
       def publish_assets(entry)
-        entry.fields[:assets].each do |item|
+        entry.fields[:assets]&.each do |item|
           asset_to_publish = @environment.assets.find(item['sys']['id'])
           next if asset_to_publish.published?
 
