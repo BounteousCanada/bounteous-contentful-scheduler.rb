@@ -4,7 +4,7 @@ PATH
     bounteous-contentful-scheduler (0.1.0)
       activesupport (~> 5.0)
       contentful-management (~> 2.9)
-      thor
+      thor (~> 0.20.3)
 
 GEM
   remote: https://rubygems.org/

@@ -18,7 +18,7 @@ module Bounteous
         scheduler.run
       end
 
-      desc "install", "Install the scheduler against the provided COntentful Space"
+      desc "install", "Install the scheduler against the provided Contentful Space"
       def install
         scheduler = Scheduler.new(options)
         scheduler.install
